@@ -6,7 +6,7 @@ Sí lo he hecho en python, iba a hacerlo en C pero es un movidote guapo
 así que me he tirado para atras.
 
 Esto es un venv de python subido tal cual. Para iniciar la web hay que 
-ejecutar:
+ejecutar en la carpeta python:
 ```
 uvicorn main:app --reload --host 0.0.0.0 --port 3000
 ```
