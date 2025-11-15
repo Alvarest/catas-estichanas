@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prueba</title>
+</head>
+<body>
+
+<select id="catadoresSelect"></select>
+<button id="mostrarTopBt">Mostrar Top</button>
+
+<table id="tablaTop" border="1" style="margin-top:1em; display:none;">
+    <thead>
+        <tr>
+            <th>Puesto</th>
+            <th>Cerveza</th>
+            <th>Productor</th>
+			<th>Estilo</th>
+            <th>Alcohol</th>
+			<th>Número de notas</th>
+            <th>Nota media</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+async function poblarSelect() {
+	const select = document.getElementById("catadoresSelect");
+
+	const todosOpcion = document.createElement("option");
+	todosOpcion.value = "todos";
+	todosOpcion.textContent = "Todos";
+	select.appendChild(todosOpcion);
+
+	const response = await fetch("http://localhost:3000/options");
+	const opciones = await response.json()
+
+	opciones.forEach(item => {
+		const opcion = document.createElement("option");
+		opcion.value = item.id;
+		opcion.textContent = item.nombre;
+		select.appendChild(opcion);
+	});
+}
+
+poblarSelect();
+
+async function generarTop() {
+	const catador = document.getElementById("catadoresSelect").value;
+	const response = await fetch("http://localhost:3000/crearTop?catador=" + catador);
+	const data = await response.json();
+
+	const table = document.getElementById("tablaTop");
+	const tbody = table.querySelector("tbody");
+	tbody.innerHTML = ""; // Para limpiar la tabla cada vez que se clique el boton
+
+	data.forEach(row => {
+		const tr = document.createElement("tr");
+
+		const tdPuesto = document.createElement("td");
+		tdPuesto.textContent = row.puesto;
+		const tdCerveza = document.createElement("td");
+		tdCerveza.textContent = row.cerveza; 
+		const tdProductor = document.createElement("td");
+		tdProductor.textContent = row.productor; 
+		const tdEstilo = document.createElement("td");
+		tdEstilo.textContent = row.estilo; 
+		const tdAlcohol = document.createElement("td");
+		tdAlcohol.textContent = row.alcohol; 
+		const tdNumNotas = document.createElement("td");
+		tdNumNotas.textContent = row.num_notas;
+		const tdMedia= document.createElement("td");
+		tdMedia.textContent = row.nota_media;
+
+		tr.appendChild(tdPuesto);
+		tr.appendChild(tdCerveza);
+		tr.appendChild(tdProductor);
+		tr.appendChild(tdEstilo);
+		tr.appendChild(tdAlcohol);
+		tr.appendChild(tdNumNotas);
+		tr.appendChild(tdMedia);
+
+		tbody.appendChild(tr);
+	});
+	
+	table.style.display = "table";
+}
+
+generarTop()
+document.getElementById("mostrarTopBt").addEventListener("click", generarTop)
+
+</script>
+
+</body>
+</html>
